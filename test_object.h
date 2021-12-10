@@ -6,8 +6,8 @@
 #define TESTPROJECT_TEST_OBJECT_H
 
 
-#include "object.h"
-#include "my_string.h"
+#include "core/object.h"
+#include "core/my_string.h"
 
 class Object : public Object_ {
 public:

@@ -4,7 +4,7 @@
 
 #include <iostream>
 #include "test_object.h"
-#include "main_loop.h"
+#include "core/main_loop.h"
 
 void Object::_loop() {
 //    std::cout << "I'm " << name.c_str() << ". " << std::endl;
