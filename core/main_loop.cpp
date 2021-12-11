@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "main_loop.h"
+#include "chrono"
 
 void MainLoop::start() {
     _loop();
@@ -12,17 +13,20 @@ void MainLoop::start() {
 void MainLoop::_loop() {
     _looping = true;
     _ready();
+    auto time_before = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
     while (true) {
         if (_quit) {
             std::cout << "Exiting!" << std::endl;
             break;
         }
-        loop();
+        auto time_now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+        loop(float(time_now.count() - time_before.count()));
+        time_before = time_now;
     }
 }
 
 void MainLoop::_ready() {
-    for (auto & object : objects) {
+    for (auto &object : objects) {
         object->_ready();
     }
 }
@@ -36,11 +40,12 @@ void MainLoop::exit() {
     clear_objects();
 }
 
-void MainLoop::loop() {
+void MainLoop::loop(float delta) {
     for (auto &object : objects) {
         if (_quit) {
             break;
         }
+        std::cout << delta << std::endl;
         object->_loop();
     }
 }

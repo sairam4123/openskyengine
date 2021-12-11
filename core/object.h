@@ -5,24 +5,12 @@
 #ifndef TESTPROJECT_OBJECT_H
 #define TESTPROJECT_OBJECT_H
 
-class MainLoop;
 
-class Object_ {
-public:
-    MainLoop *mainLoop{};
+#include "_object.h"
+#include "main_loop.h" // Stub class to include this header.
 
-    virtual void _loop();
-
-    virtual void _ready();
-
-    virtual void _exit();
-
-    int id = 0;
-
-    bool operator==(const Object_ *object1) const {
-        return object1->id == id;
-    }
-};
+class Object : public Object_ {
+}; // Stub class please ignore.
 
 
 #endif //TESTPROJECT_OBJECT_H

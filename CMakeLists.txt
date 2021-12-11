@@ -3,4 +3,4 @@ project(TestProject)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(TestProject main.cpp test_object.cpp core/object.cpp core/my_string.cpp core/main_loop.cpp)
+add_executable(TestProject main.cpp core/my_string.cpp core/main_loop.cpp core/node.cpp core/node.h user/node_2d.cpp user/node_2d.h)
