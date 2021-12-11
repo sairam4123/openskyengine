@@ -61,3 +61,7 @@ MyString *MyString::operator[](int index) {
 MyString *MyString::operator()(int start, int end) {
     return new MyString(str->substr(start, end).c_str());
 }
+
+MyString::~MyString() {
+    delete str;
+}

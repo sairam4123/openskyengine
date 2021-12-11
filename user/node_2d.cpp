@@ -13,9 +13,10 @@ void Node2D::_exit() {
     std::cout << "exiting!" << std::endl;
 }
 
-void Node2D::_loop() {
-    x += 0.1;
-    if (x >= 1000) {
+void Node2D::_loop(float delta) {
+    x += 1*delta;
+    std::cout << x << "\n";
+    if (x >= 10) {
         mainLoop->exit();
     }
 }

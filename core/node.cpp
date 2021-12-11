@@ -45,3 +45,7 @@ void Node::set_name(MyString *p_name) {
 void Node::set_name(const char *p_name) {
     name = new MyString(p_name);
 }
+
+Node::~Node() {
+    delete name;
+}

@@ -15,7 +15,7 @@ public:
 
     float rotation = 0;
 
-    void _loop() override;
+    void _loop(float delta) override;
 
     void _exit() override;
 

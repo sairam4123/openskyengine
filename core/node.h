@@ -43,6 +43,8 @@ public:
     explicit Node(MyString *p_name) {
         name = p_name;
     }
+
+    ~Node();
 };
 
 

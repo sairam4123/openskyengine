@@ -12,5 +12,9 @@ int main() {
     node->add_child(node_2);
 
     mainLoop->start();
+
+    delete node;
+    delete node_2;
+    delete mainLoop;
     return 0;
 }

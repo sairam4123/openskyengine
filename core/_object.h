@@ -13,7 +13,7 @@ class Object_ {
 public:
     MainLoop *mainLoop{};
 
-    virtual void _loop() = 0;
+    virtual void _loop(float delta) = 0;
 
     virtual void _ready() = 0;
 

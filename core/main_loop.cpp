@@ -13,14 +13,19 @@ void MainLoop::start() {
 void MainLoop::_loop() {
     _looping = true;
     _ready();
-    auto time_before = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+    auto get_time = [](){
+        return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
+    };
+    auto time_before = get_time();
     while (true) {
         if (_quit) {
             std::cout << "Exiting!" << std::endl;
             break;
         }
-        auto time_now = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
-        loop(float(time_now.count() - time_before.count()));
+        auto time_now = get_time();
+        auto dur = time_now - time_before;
+        auto delta = std::chrono::duration_cast<std::chrono::duration<float>>(dur).count();
+        loop(delta);
         time_before = time_now;
     }
 }
@@ -45,8 +50,7 @@ void MainLoop::loop(float delta) {
         if (_quit) {
             break;
         }
-        std::cout << delta << std::endl;
-        object->_loop();
+        object->_loop(delta);
     }
 }
 
@@ -74,4 +78,8 @@ void MainLoop::clear_objects() {
     for (auto &object : unedited_objects) {
         remove_object(object);
     }
+}
+
+MainLoop::~MainLoop() {
+    objects.shrink_to_fit();
 }
