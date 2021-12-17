@@ -5,16 +5,20 @@
 #include <iostream>
 #include "main_loop.h"
 #include "chrono"
+#include "csignal"
 
 void MainLoop::start() {
+    signal(SIGINT, _exit_handler);
+    signal(SIGTERM, _exit_handler);
     _loop();
 }
 
 void MainLoop::_loop() {
     _looping = true;
     _ready();
-    auto get_time = [](){
-        return std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::system_clock::now().time_since_epoch());
+    auto get_time = []() {
+        return std::chrono::duration_cast<std::chrono::nanoseconds>(
+                std::chrono::system_clock::now().time_since_epoch());
     };
     auto time_before = get_time();
     while (true) {
@@ -31,7 +35,7 @@ void MainLoop::_loop() {
 }
 
 void MainLoop::_ready() {
-    for (auto &object : objects) {
+    for (auto &object: *objects) {
         object->_ready();
     }
 }
@@ -46,7 +50,7 @@ void MainLoop::exit() {
 }
 
 void MainLoop::loop(float delta) {
-    for (auto &object : objects) {
+    for (auto &object: *objects) {
         if (_quit) {
             break;
         }
@@ -54,32 +58,50 @@ void MainLoop::loop(float delta) {
     }
 }
 
-void MainLoop::add_object(Object_ *object) {
-    objects.push_back(object);
+void MainLoop::add_object(Object *object) {
+    objects->push_back(object);
     object->id = _counter;
     _counter++;
-    object->mainLoop = this;
     if (_looping) {
         object->_ready();
     }
 }
 
-void MainLoop::remove_object(Object_ *object) {
-    auto index = std::find(objects.begin(), objects.end(), object);
-    if (index != objects.cend()) {
-        objects.erase(index);
+void MainLoop::remove_object(Object *object) {
+    auto index = std::find(objects->begin(), objects->end(), object);
+    if (index != objects->end()) {
+        objects->erase(index);
     }
     object->_exit();
-    object->mainLoop = nullptr;
 }
 
 void MainLoop::clear_objects() {
-    auto unedited_objects = objects;
-    for (auto &object : unedited_objects) {
+    auto unedited_objects = *objects;
+    for (auto &object: unedited_objects) {
         remove_object(object);
     }
 }
 
 MainLoop::~MainLoop() {
-    objects.shrink_to_fit();
+    objects->shrink_to_fit();
+    mainLoop = nullptr;
+    delete objects;
 }
+
+void MainLoop::_exit_handler(int signum) {
+    fflush(stdout);
+    std::cout << "\n\nStarting application exit process due to " << "keyboard interrupt" << "." << std::endl;
+    MainLoop::get_singleton()->exit();
+    signal(signum, _exit_handler);
+}
+
+MainLoop::MainLoop() {
+    mainLoop = this;
+    objects = new std::vector<Object *>();
+}
+MainLoop *MainLoop::mainLoop = nullptr;
+
+MainLoop *MainLoop::get_singleton() {
+    return mainLoop;
+}
+

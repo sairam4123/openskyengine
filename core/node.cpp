@@ -7,9 +7,7 @@
 void Node::add_child(Node *child) {
     child->parent = this;
     children.push_back(child);
-    if (child->mainLoop == nullptr) {
-        mainLoop->add_object(child);
-    }
+    MainLoop::get_singleton()->add_object(child);
 }
 
 void Node::remove_child(Node *child) {
@@ -28,9 +26,7 @@ void Node::remove_child(int index) {
 void Node::add_child(Node *child, int index) {
     child->parent = this;
     children.insert(children.begin() + index, child);
-    if (child->mainLoop == nullptr) {
-        mainLoop->add_object(child);
-    }
+    MainLoop::get_singleton()->add_object(child);
 }
 
 void Node::move_child(Node *child, int index) {
@@ -38,12 +34,12 @@ void Node::move_child(Node *child, int index) {
     add_child(child, index);
 }
 
-void Node::set_name(MyString *p_name) {
+void Node::set_name(String *p_name) {
     name = p_name;
 }
 
 void Node::set_name(const char *p_name) {
-    name = new MyString(p_name);
+    name = new String(p_name);
 }
 
 Node::~Node() {

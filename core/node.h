@@ -6,12 +6,13 @@
 #define TESTPROJECT_NODE_H
 
 #include "object.h"
-#include "my_string.h"
+#include "gstring.h"
 #include "vector"
+#include "main_loop.h"
 
-class Node : public Object_ {
+class Node : public Object {
 public:
-    MyString *name;
+    String *name;
 
     Node *parent = nullptr;
     std::vector<Node *> children;
@@ -26,21 +27,15 @@ public:
 
     void add_child(Node *child, int index);
 
-    void set_name(MyString *p_name);
+    void set_name(String *p_name);
 
     void set_name(const char *p_name);
 
-    void _ready() override = 0;
-
-    void _loop() override = 0;
-
-    void _exit() override = 0;
-
     explicit Node(const char *_name) {
-        name = new MyString(_name);
+        name = new String(_name);
     }
 
-    explicit Node(MyString *p_name) {
+    explicit Node(String *p_name) {
         name = p_name;
     }
 

@@ -5,12 +5,22 @@
 #ifndef TESTPROJECT_OBJECT_H
 #define TESTPROJECT_OBJECT_H
 
+#include "gstring.h"
 
-#include "_object.h"
-#include "main_loop.h" // Stub class to include this header.
+class Object {
+public:
+    virtual void _loop(const float delta) {};
 
-class Object : public Object_ {
-}; // Stub class please ignore.
+    virtual void _ready() {};
+
+    virtual void _exit() {};
+
+    int id = 0;
+
+    bool operator==(const Object *object1) const {
+        return object1->id == id;
+    }
+};
 
 
 #endif //TESTPROJECT_OBJECT_H

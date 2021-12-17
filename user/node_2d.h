@@ -22,10 +22,10 @@ public:
     void _ready() override;
 
     explicit Node2D(const char *_name) : Node(_name) {
-        name = new MyString(_name);
+        name = new String(_name);
     }
 
-    explicit Node2D(MyString *p_name) : Node(p_name) {
+    explicit Node2D(String *p_name) : Node(p_name) {
         name = p_name;
     }
 };

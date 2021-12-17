@@ -5,7 +5,7 @@
 #ifndef TESTPROJECT_MAIN_LOOP_H
 #define TESTPROJECT_MAIN_LOOP_H
 
-#include "_object.h"
+#include "object.h"
 #include "vector"
 
 class MainLoop {
@@ -16,18 +16,24 @@ public:
     void exit();
 
     void loop(float delta);
-    void add_object(Object_* object);
-    void remove_object(Object_* object);
+    void add_object(Object* object);
+    void remove_object(Object* object);
     void clear_objects();
+    static MainLoop* get_singleton();
+
+    MainLoop();
+    ~MainLoop();
 private:
-    std::vector<Object_*> objects;
+    std::vector<Object*>* objects;
     bool _quit = false;
     bool _looping = false;
 
+    static MainLoop* mainLoop;
+
+    static void _exit_handler(int signum);
     void _loop();
     void _ready();
     int _counter = 0;
 };
-
 
 #endif //TESTPROJECT_MAIN_LOOP_H
