@@ -31,6 +31,7 @@ private:
     static MainLoop* mainLoop;
 
     static void _exit_handler(int signum);
+
     void _loop();
     void _ready();
     int _counter = 0;

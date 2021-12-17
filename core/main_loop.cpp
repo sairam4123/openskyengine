@@ -7,6 +7,8 @@
 #include "chrono"
 #include "csignal"
 
+typedef std::chrono::nanoseconds TIME;
+
 void MainLoop::start() {
     signal(SIGINT, _exit_handler);
     signal(SIGTERM, _exit_handler);
@@ -17,14 +19,15 @@ void MainLoop::_loop() {
     _looping = true;
     _ready();
     auto get_time = []() {
-        return std::chrono::duration_cast<std::chrono::nanoseconds>(
+        return std::chrono::duration_cast<TIME>(
                 std::chrono::system_clock::now().time_since_epoch());
     };
-    auto time_before = get_time();
-    while (true) {
-        if (_quit) {
-            std::cout << "Exiting!" << std::endl;
-            break;
+    auto time_before = TIME::zero();
+    while (!_quit) {
+        if (time_before == TIME::zero()){
+            auto time_now = get_time();
+            time_before = time_now;
+            continue;
         }
         auto time_now = get_time();
         auto dur = time_now - time_before;
@@ -32,6 +35,7 @@ void MainLoop::_loop() {
         loop(delta);
         time_before = time_now;
     }
+    std::cout << "Exiting!" << std::endl;
 }
 
 void MainLoop::_ready() {
@@ -44,6 +48,7 @@ void MainLoop::exit() {
     if (_quit) {
         return;
     }
+    _looping = false;
     _quit = true;
     is_quitting = true;
     clear_objects();
@@ -99,6 +104,7 @@ MainLoop::MainLoop() {
     mainLoop = this;
     objects = new std::vector<Object *>();
 }
+
 MainLoop *MainLoop::mainLoop = nullptr;
 
 MainLoop *MainLoop::get_singleton() {

@@ -6,7 +6,7 @@
 #include "iostream"
 
 void Resource::_loop(const float delta) {
-    std::cout << "Test" << std::endl;
+//    std::cout << "Test" << std::endl;
 }
 
 void Resource::_ready() {

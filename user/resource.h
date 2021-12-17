@@ -10,7 +10,7 @@
 
 class Resource : public Reference {
 public:
-    void _loop(const float delta) override;
+    void _loop(float delta) override;
     void _ready() override;
     void _exit() override;
 };
