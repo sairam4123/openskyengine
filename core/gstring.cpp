@@ -64,3 +64,19 @@ String *String::operator()(int start, int end) {
 String::~String() {
     delete str;
 }
+
+bool String::operator==(const String *myString) {
+    return std::strcmp(str->c_str(), myString->str->c_str()) == 0;
+}
+
+bool String::operator==(const char *myString) {
+    return std::strcmp(str->c_str(), myString) == 0;
+}
+
+bool String::operator!=(const String *myString) {
+    return std::strcmp(str->c_str(), myString->str->c_str()) != 0;
+}
+
+bool String::operator!=(const char *myString) {
+    return std::strcmp(str->c_str(), myString) != 0;
+}

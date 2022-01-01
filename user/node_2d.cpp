@@ -18,8 +18,8 @@ void Node2D::_loop(const float delta) {
 //    if (fmod(x, 1.0) == 0.0) {
 //        std::cout << x << std::endl;
 //    }
-    std::cout << fmod(x, 1.0) << std::endl;
-    if (x >= 100) {
+    std::cout << x << std::endl;
+    if (x >= 5) {
         MainLoop::get_singleton()->exit();
     }
 }

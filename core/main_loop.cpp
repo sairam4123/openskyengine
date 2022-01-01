@@ -10,9 +10,11 @@
 typedef std::chrono::nanoseconds TIME;
 
 void MainLoop::start() {
-    signal(SIGINT, _exit_handler);
-    signal(SIGTERM, _exit_handler);
-    _loop();
+//    signal(SIGINT, _exit_handler);
+//    signal(SIGTERM, _exit_handler);
+    _looping = true;
+    _ready();
+//    _loop();
 }
 
 void MainLoop::_loop() {

@@ -28,22 +28,13 @@ public:
 
     String &operator*=(size_t num);
 
-    bool operator==(const String* myString) {
-        return std::strcmp(str->c_str(), myString->str->c_str()) == 0;
-    }
+    bool operator==(const String* myString);
 
-    bool operator==(const char* myString) {
-        return std::strcmp(str->c_str(), myString) == 0;
-    }
+    bool operator==(const char* myString);
 
-    bool operator!=(const String* myString) {
-        return std::strcmp(str->c_str(), myString->str->c_str()) != 0;
-    }
+    bool operator!=(const String* myString);
 
-    bool operator!=(const char* myString) {
-        return std::strcmp(str->c_str(), myString) != 0;
-    }
-
+    bool operator!=(const char* myString);
 
     String* operator[](int index);
     String* operator()(int start, int end);
