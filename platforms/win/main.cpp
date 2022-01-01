@@ -7,7 +7,9 @@
 #include <iostream>
 #include "../../core/main_loop.h"
 #include "../../user/node_2d.h"
+#include "chrono"
 
+typedef std::chrono::microseconds TIME;
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 MainLoop* mainLoop;
@@ -48,6 +50,11 @@ void CreateConsole()
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow) {
     const wchar_t CLASS_NAME[] = L"OpenSkyEngine (inspired from Godot Game Engine)";
+    auto get_time = []() {
+        return std::chrono::duration_cast<TIME>(
+                std::chrono::system_clock::now().time_since_epoch());
+    };
+    auto time_before = get_time();
 
     WNDCLASSW wc = {};
     wc.lpfnWndProc = WindowProc;
@@ -76,22 +83,30 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
     }
     signal(SIGINT, exit_terminator);
     auto node1 = Node2D("Test");
+    ShowWindow(hwnd, nCmdShow);
     CreateConsole();
     MainLoop::get_singleton()->add_object(&node1);
     MainLoop::get_singleton()->start();
 
-    ShowWindow(hwnd, nCmdShow);
-    MSG msg = {};
-
-    while (GetMessage(&msg, NULL, 0, 0)) {
-        TranslateMessage(&msg);
-        MainLoop::get_singleton()->loop(0.1);
+    while (true) {
+        MSG msg = {};
+        auto time_now = get_time();
+        auto dur = time_now - time_before;
+        auto delta = std::chrono::duration_cast<std::chrono::duration<float>>(dur).count();
+        auto retValue = PeekMessageW(&msg, hwnd, 0, 0, PM_REMOVE);
+        if (retValue){
+            TranslateMessage(&msg);
+        }
+        MainLoop::get_singleton()->loop(delta);
         if (MainLoop::get_singleton()->is_quitting) {
             std::cout << "Trying to exit!" << std::endl;
-//            PostMessageW(hwnd, WM_QUIT, 0, 0);
             PostQuitMessage(0);
+            break;
         }
-        DispatchMessage(&msg);
+        if (retValue) {
+            DispatchMessageW(&msg);
+        }
+        time_before = time_now;
     }
 
     FreeConsole();

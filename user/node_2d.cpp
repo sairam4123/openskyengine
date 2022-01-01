@@ -19,7 +19,7 @@ void Node2D::_loop(const float delta) {
 //        std::cout << x << std::endl;
 //    }
     std::cout << x << std::endl;
-    if (x >= 5) {
+    if (x >= 100) {
         MainLoop::get_singleton()->exit();
     }
 }
