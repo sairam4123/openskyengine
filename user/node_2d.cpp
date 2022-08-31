@@ -14,7 +14,7 @@ void Node2D::_exit() {
 }
 
 void Node2D::_loop(const float delta) {
-    x += 1*delta;
+    x += 1 * delta;
 //    if (fmod(x, 1.0) == 0.0) {
 //        std::cout << x << std::endl;
 //    }
@@ -22,4 +22,10 @@ void Node2D::_loop(const float delta) {
     if (x >= 100) {
         MainLoop::get_singleton()->exit();
     }
+}
+
+void Node2D::_input(InputEvent *event) {
+    std::cout << "Got mouse motion event" << std::endl;
+    auto e = (InputEventMouseMotion *) event;
+    std::cout << "(" << e->position->x << ", " << e->position->y << ")" << std::endl;
 }

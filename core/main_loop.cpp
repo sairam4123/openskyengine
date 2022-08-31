@@ -57,7 +57,8 @@ void MainLoop::exit() {
 }
 
 void MainLoop::loop(float delta) {
-    for (auto &object: *objects) {
+    auto unedited_objects = *objects;
+    for (auto &object: unedited_objects) {
         if (_quit) {
             break;
         }
@@ -112,4 +113,16 @@ MainLoop *MainLoop::mainLoop = nullptr;
 MainLoop *MainLoop::get_singleton() {
     return mainLoop;
 }
+
+std::vector<Object *> *MainLoop::get_objects() {
+    return objects;
+}
+
+void MainLoop::propagate_input(InputEvent *event) {
+    auto unedited_objects = *objects;
+    for (auto &object : unedited_objects) {
+        object->_input(event);
+    }
+}
+
 

@@ -21,6 +21,8 @@ public:
 
     void _ready() override;
 
+    void _input(InputEvent* event) override;
+
     explicit Node2D(const char *_name) : Node(_name) {
         name = new String(_name);
     }

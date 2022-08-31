@@ -6,11 +6,30 @@
 #define TESTPROJECT_PLAT_WIN_H
 
 #include "windows.h"
+#include "windowsx.h"
 
 class Windows {
-    int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow);
 
-    LRESULT WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+    static Windows* _singleton;
+public:
+    static Windows* get_singleton();
+
+    Windows();
+    ~Windows();
+
+    LRESULT wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+    static void exit_terminator(int signum);
+
+    static void CreateConsole();
+
+    void _loop(HINSTANCE hInstance, HWND hwnd);
+
+    int WINAPI win_main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow);
+
+    inline static bool IsConsoleWindowActive();
+    static void ToggleConsoleWindow();
+
 };
 
 

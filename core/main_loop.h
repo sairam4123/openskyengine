@@ -7,33 +7,47 @@
 
 #include "object.h"
 #include "vector"
+#include "input_event.h"
 
 class MainLoop {
 public:
     bool is_quitting = false;
+
     void start();
 
     void exit();
 
     void loop(float delta);
-    void add_object(Object* object);
-    void remove_object(Object* object);
+
+    void add_object(Object *object);
+
+    void remove_object(Object *object);
+
     void clear_objects();
-    static MainLoop* get_singleton();
+
+    static MainLoop *get_singleton();
+
+    std::vector<Object *> *get_objects();
 
     MainLoop();
+
     ~MainLoop();
+
+    void propagate_input(InputEvent *event);
+
 private:
-    std::vector<Object*>* objects;
+    std::vector<Object *> *objects;
     bool _quit = false;
     bool _looping = false;
 
-    static MainLoop* mainLoop;
+    static MainLoop *mainLoop;
 
     static void _exit_handler(int signum);
 
     void _loop();
+
     void _ready();
+
     int _counter = 0;
 };
 

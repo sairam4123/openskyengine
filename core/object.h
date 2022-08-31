@@ -6,6 +6,7 @@
 #define TESTPROJECT_OBJECT_H
 
 #include "gstring.h"
+#include "input_event.h"
 
 class Object {
 public:
@@ -16,6 +17,8 @@ public:
     virtual void _exit() {};
 
     int id = 0;
+
+    virtual void _input(InputEvent* event) {};
 
     bool operator==(const Object *object1) const {
         return object1->id == id;
