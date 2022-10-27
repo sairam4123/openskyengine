@@ -7,13 +7,17 @@
 
 #include "windows.h"
 #include "windowsx.h"
+#include "../../core/main_loop.h"
 
 class Windows {
 
     static Windows* _singleton;
+    static MainLoop mainLoop;
+
 public:
     static Windows* get_singleton();
 
+    HWND main_hwnd;
     Windows();
     ~Windows();
 

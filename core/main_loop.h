@@ -35,6 +35,7 @@ public:
 
     void propagate_input(InputEvent *event);
 
+    int object_counter = 0;
 private:
     std::vector<Object *> *objects;
     bool _quit = false;
@@ -48,7 +49,6 @@ private:
 
     void _ready();
 
-    int _counter = 0;
 };
 
 #endif //TESTPROJECT_MAIN_LOOP_H

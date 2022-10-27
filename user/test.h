@@ -7,6 +7,7 @@
 
 
 #include "../core/node.h"
+#include "resource.h"
 
 class Base {
 public:
@@ -22,6 +23,9 @@ class Test : public Node {
     void _ready() override;
 
     void test();
+
+    Resource *resource;
+
     void _input(InputEvent *event) override;
 
 public:

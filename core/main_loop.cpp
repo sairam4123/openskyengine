@@ -68,8 +68,8 @@ void MainLoop::loop(float delta) {
 
 void MainLoop::add_object(Object *object) {
     objects->push_back(object);
-    object->id = _counter;
-    _counter++;
+    object->id = object_counter;
+    object_counter++;
     if (_looping) {
         object->_ready();
     }

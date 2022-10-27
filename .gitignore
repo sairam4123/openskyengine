@@ -34,3 +34,5 @@
 /ignore*
 /cmake-build*
 /.idea/*
+
+/build/*

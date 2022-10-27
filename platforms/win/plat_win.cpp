@@ -11,6 +11,7 @@
 #include "iostream"
 #include "../../main.h"
 #include "../../core/math/vector_2.h"
+#include "display_server_windows.h"
 
 typedef std::chrono::microseconds TIME;
 
@@ -58,18 +59,21 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
 
 int Windows::win_main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow) {
     const wchar_t CLASS_NAME[] = L"OpenSkyEngine (inspired from Godot Game Engine)";
+    
+    auto ds = DisplayServerWindows(hInstance);
+    DisplayServer::displayServer = &ds;
 
     WNDCLASSW wc = {};
     wc.lpfnWndProc = (WNDPROC)::WndProc;
     wc.hInstance = hInstance;
     wc.hCursor = LoadCursor(hInstance, IDC_ARROW);
-    wc.lpszClassName = CLASS_NAME;
+    wc.lpszClassName = DisplayServerWindows::CLASS_NAME;
 
     RegisterClassW(&wc);
 
     HWND hwnd = CreateWindowExW(
             0,
-            CLASS_NAME,
+            DisplayServerWindows::CLASS_NAME,
             L"OpenSkyEngine - TestWindow",
             WS_OVERLAPPEDWINDOW,
 
@@ -84,7 +88,7 @@ int Windows::win_main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLi
     if (hwnd == nullptr) {
         return 0;
     }
-
+    main_hwnd = hwnd;
     signal(SIGINT, exit_terminator);
     ShowWindow(hwnd, nCmdShow);
     CreateConsole();
@@ -95,7 +99,6 @@ int Windows::win_main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLi
     MainLoop::get_singleton()->start();
 
     _loop(hInstance, hwnd);
-
     FreeConsole();
     return 0;
 }
@@ -132,6 +135,9 @@ void Windows::_loop(HINSTANCE hInstance, HWND hwnd) {
 LRESULT Windows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
     switch (uMsg) {
         case WM_DESTROY:
+            if (hwnd != main_hwnd) {
+                break;
+            }
             MainLoop::get_singleton()->exit();
             PostQuitMessage(0);
             break;

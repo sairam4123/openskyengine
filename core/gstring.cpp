@@ -17,6 +17,10 @@ const char *String::c_str() {
     return str->c_str();
 }
 
+const wchar_t *String::wc_str() {
+    return wstr->c_str();
+}
+
 String String::operator*(size_t num) {
     std::string *tmp = str;
     for (size_t i = 1; i < num; ++i) {
