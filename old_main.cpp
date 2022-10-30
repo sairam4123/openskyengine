@@ -28,3 +28,18 @@ int main() {
     cout << "Exiting Application" << endl;
     return error;
 }
+
+
+    // std::cout << DisplayServer::get_singleton() << std::endl;
+    // auto window2 = DisplayServer::get_singleton()->create_window(]
+    //         new String("TestWindow3"),
+    //         new Vector2(50, 10),
+    //         new Vector2(500, 500)
+    //         );
+    // auto hwnd_id = dynamic_cast<DisplayServerWindows *>(DisplayServer::get_singleton())->hwnd_id_map;
+    // for (auto itr = hwnd_id.begin(); itr != hwnd_id.end(); ++itr) {
+        // std::cout << '\t' << itr->first << '\t' << itr->second
+            //  << '\n';
+    // }
+    // std::cout <<  << std::endl;
+    // std::cout << window1->id << std::endl;

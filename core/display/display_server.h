@@ -9,12 +9,12 @@
 #include <vector>
 #include "../window.h"
 #include "../gstring.h"
-#include "../math/vector_2.h"
 #include "functional"
 
 class DisplayServer {
 public:
     static DisplayServer *displayServer;
+    int _counter = 0;
 
 public:
     static DisplayServer *get_singleton() {
@@ -23,11 +23,17 @@ public:
 
     std::vector<Window *> windows;
 
-    virtual Window *create_window(String *name, Vector2 *position, Vector2 *size);
+    virtual Window *create_window(String *name, Vector2i *position, Vector2i *size);
 
     virtual void destroy_window(int id);
 
     virtual void destroy_window(Window *window);
+
+    virtual void set_window_visiblity(int id, bool visible) = 0;
+
+    virtual int64_t get_native_handle(int id) = 0;
+
+    Window * main_window;
 
 //public:
 //    std::vector<std::function<DisplayServer*(void )>> create_functions;

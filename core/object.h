@@ -5,7 +5,6 @@
 #ifndef TESTPROJECT_OBJECT_H
 #define TESTPROJECT_OBJECT_H
 
-#include "gstring.h"
 #include "input_event.h"
 
 class Object {

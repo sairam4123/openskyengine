@@ -14,15 +14,26 @@ class DisplayServerWindows : public DisplayServer{
 private:
     HINSTANCE hInstance;
 
-    Window * create_window(String *name, Vector2 *position, Vector2 *size) override;
+    Window * create_window(String *name, Vector2i *position, Vector2i *size) override;
     void destroy_window(Window *window) override;
+    
+    void set_window_visiblity(int id, bool visible) override;
+    int64_t get_native_handle(int id) override;
+
+    HWND get_main_hwnd();
 
 public:
     std::map<int, HWND> hwnd_id_map;
     explicit DisplayServerWindows(HINSTANCE p_hInstance);
 
+    LRESULT wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
     HWND get_hwnd(int window_id);
     static const wchar_t* CLASS_NAME;
+
+    DisplayServerWindows();
+    static void _setup_class(HINSTANCE hInstance, WNDPROC wndproc);
+
 };
 
 

@@ -10,8 +10,8 @@ void Node2D::_ready() {
     std::cout << name->c_str() << " is ready." << std::endl;
     auto window1 = DisplayServer::get_singleton()->create_window(
             new String("TestWindow2"),
-            new Vector2(10, 10),
-            new Vector2(500, 500)
+            new Vector2i(10, 10),
+            new Vector2i(500, 500)
             );
 }
 

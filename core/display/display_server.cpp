@@ -5,13 +5,13 @@
 #include "display_server.h"
 #include "../main_loop.h"
 
-Window *DisplayServer::create_window(String *name, Vector2 *position, Vector2 *size) {
+Window *DisplayServer::create_window(String *name, Vector2i *position, Vector2i *size) {
     auto win = new Window();
     win->name = name;
     win->position = position;
     win->size = size;
-    win->id = MainLoop::get_singleton()->object_counter;
-    MainLoop::get_singleton()->object_counter++;
+    win->id = _counter;
+    _counter++;
     windows.push_back(win);
     return win;
 }

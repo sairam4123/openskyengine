@@ -6,17 +6,24 @@
 #define TESTPROJECT_WINDOW_H
 
 #include "gstring.h"
-#include "math/vector_2.h"
+#include "math/vector_2i.h"
 
 class Window {
 public:
     int id = 0;
+
     String* name = new String("");
-    Vector2* position = Vector2::ZERO();
-    Vector2* size = new Vector2(100, 100);
+    Vector2i* position = Vector2i::ZERO();
+    Vector2i* size = new Vector2i(100, 100);
+    bool visible = false;
 
     void redraw();
     void close();
+
+    void toggle_visiblity();
+    void show();
+    void hide();
+    void get_native_handle();
 };
 
 

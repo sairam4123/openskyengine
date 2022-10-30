@@ -71,24 +71,32 @@ int Windows::win_main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLi
 
     RegisterClassW(&wc);
 
-    HWND hwnd = CreateWindowExW(
-            0,
-            DisplayServerWindows::CLASS_NAME,
-            L"OpenSkyEngine - TestWindow",
-            WS_OVERLAPPEDWINDOW,
-
-            CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
-
-            nullptr,
-            nullptr,
-            hInstance,
-            nullptr
+    auto win = DisplayServer::get_singleton()->create_window(
+        new String("OpenSkyEngine - TestWindow"),
+        new Vector2i(CW_USEDEFAULT, CW_USEDEFAULT),
+        new Vector2i(CW_USEDEFAULT, CW_USEDEFAULT)
     );
+
+    auto hwnd = ds.get_hwnd(win->id);
+    // HWND hwnd = CreateWindowExW(
+    //         0,
+    //         DisplayServerWindows::CLASS_NAME,
+    //         L"OpenSkyEngine - TestWindow",
+    //         WS_OVERLAPPEDWINDOW,
+
+            // CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+
+    //         nullptr,
+    //         nullptr,
+    //         hInstance,
+    //         nullptr
+    // );
 
     if (hwnd == nullptr) {
         return 0;
     }
     main_hwnd = hwnd;
+    ds.main_window = win;
     signal(SIGINT, exit_terminator);
     ShowWindow(hwnd, nCmdShow);
     CreateConsole();
