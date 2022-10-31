@@ -37,8 +37,22 @@ void Node2D::_input(InputEvent *event) {
     if (motion) {
         std::cout << "Mouse Motion (" << motion->position->x << ", " << motion->position->y << ")" << std::endl;
     }
+
     auto btn = dynamic_cast<InputEventMouseButton *>(event);
     if (btn) {
         std::cout << "Mouse Button " << btn->button_index << " is " << btn->pressed << std::endl;
+    }
+
+    auto key_ev = dynamic_cast<InputEventKey *>(event);
+    if (key_ev) {
+        if (key_ev->unicode == L'X') {
+            std::wcout << key_ev->unicode << std::endl;
+            auto win = DisplayServer::get_singleton()->create_window(
+                new String("Window #1"),
+                new Vector2i(100, 200),
+                new Vector2i(1020, 200)
+            );
+        }
+        std::wcout << "Key: " << key_ev->unicode << " is " << key_ev->pressed << " echo: " << key_ev->echo << std::endl;
     }
 }

@@ -9,11 +9,16 @@
 #include "../../core/display/display_server.h"
 #include "windows.h"
 #include <map>
+#include <set>
+
 
 class DisplayServerWindows : public DisplayServer{
 private:
     HINSTANCE hInstance;
-
+    
+    std::set<wchar_t> pressed_keys;
+    std::map<int, HWND> hwnd_id_map;
+    
     Window * create_window(String *name, Vector2i *position, Vector2i *size) override;
     void destroy_window(Window *window) override;
     
@@ -23,16 +28,11 @@ private:
     HWND get_main_hwnd();
 
 public:
-    std::map<int, HWND> hwnd_id_map;
     explicit DisplayServerWindows(HINSTANCE p_hInstance);
-
     LRESULT wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
     HWND get_hwnd(int window_id);
+    
     static const wchar_t* CLASS_NAME;
-
-    DisplayServerWindows();
-    static void _setup_class(HINSTANCE hInstance, WNDPROC wndproc);
 
 };
 

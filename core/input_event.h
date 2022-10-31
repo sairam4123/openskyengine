@@ -14,13 +14,44 @@ public:
     virtual String get_name() = 0;
 };
 
+class InputEventWithModifiers: public InputEvent {
+public:
+    bool ctrl = false;
+    bool shift = false;
+    bool alt = false;
+    bool meta = false;
+    
+    String get_name() override {
+        return String("InputEventKey");
+    }
+
+};
+
+class InputEventKey: public InputEventWithModifiers {
+public:
+    
+    wchar_t unicode;
+    bool pressed = false;
+    bool echo = false;
+
+    String get_name() override {
+        return String("InputEventKey");
+    }
+
+    InputEventKey(wchar_t p_unicode, bool p_pressed, bool p_echo) {
+        unicode = p_unicode;
+        pressed = p_pressed;
+        echo = p_echo;
+    };
+};
+
 enum ButtonCode {
     L_BUTTON = 0,
     M_BUTTON = 1,
     R_BUTTON = 2
 };
 
-class  InputEventMouse: public InputEvent {
+class  InputEventMouse: public InputEventWithModifiers {
 public:
     String get_name() override {
         return String("InputEventMouse");

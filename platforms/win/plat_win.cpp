@@ -53,7 +53,11 @@ void Windows::CreateConsole()
 }
 
 LRESULT CALLBACK WndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    return Windows::get_singleton()->wnd_proc(hwnd, uMsg, wParam, lParam);
+    return static_cast<DisplayServerWindows *>(
+        DisplayServer::get_singleton()
+        )->wnd_proc(
+            hwnd, uMsg, wParam, lParam
+        );
 }
 
 
@@ -149,14 +153,14 @@ LRESULT Windows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
             MainLoop::get_singleton()->exit();
             PostQuitMessage(0);
             break;
-        case WM_KEYDOWN:
-//            std::cout << ((char)wParam == 'H') << std::endl;
-            switch ((wchar_t)wParam) {
-                case ' ':
-                    ToggleConsoleWindow();
-            }
-            std::cout << "The entered character is: " << (char)wParam << std::endl;
-            break;
+//         case WM_KEYDOWN:
+// //            std::cout << ((char)wParam == 'H') << std::endl;
+//             switch ((wchar_t)wParam) {
+//                 case ' ':
+//                     ToggleConsoleWindow();
+//             }
+//             std::cout << "The entered character is: " << (char)wParam << std::endl;
+//             break;
         case WM_MOUSEMOVE: {
             auto x_pos = (int)GET_X_LPARAM(lParam);
             auto y_pos = (int)GET_Y_LPARAM(lParam);
