@@ -9,6 +9,68 @@
 #include "math/vector_2.h"
 #include "gstring.h"
 
+enum Key {
+    KEY_A = 0,
+    KEY_B = 1,
+    KEY_C = 2,
+    KEY_D = 3,
+    KEY_E = 4,
+    KEY_F = 5,
+    KEY_G = 6,
+    KEY_H = 7,
+    KEY_I = 8,
+    KEY_J = 9,
+    KEY_K = 10,
+    KEY_L = 11,
+    KEY_M = 12,
+    KEY_N = 13,
+    KEY_O = 14,
+    KEY_P = 15,
+    KEY_Q = 16,
+    KEY_R = 17,
+    KEY_S = 18,
+    KEY_T = 19,
+    KEY_U = 20,
+    KEY_V = 21,
+    KEY_W = 22,
+    KEY_X = 23,
+    KEY_Y = 24,
+    KEY_Z = 25,
+
+    // nums
+    KEY_1 = 26,
+    KEY_2 = 27,
+    KEY_3 = 28,
+    KEY_4 = 29,
+    KEY_5 = 30,
+    KEY_6 = 31,
+    KEY_7 = 32,
+    KEY_8 = 33,
+    KEY_9 = 34,
+    KEY_0 = 35,
+
+    // keypad
+    KEY_KP_1 = 36,
+    KEY_KP_2 = 37,
+    KEY_KP_3 = 38,
+    KEY_KP_4 = 39,
+    KEY_KP_5 = 40,
+    KEY_KP_6 = 41,
+    KEY_KP_7 = 42,
+    KEY_KP_8 = 43,
+    KEY_KP_9 = 44,
+    KEY_KP_0 = 45,
+    KEY_KP_PERIOD = 46,
+    KEY_KP_ENTER = 47,
+    KEY_KP_SLASH = 48,
+    KEY_KP_ASTRISK = 49,
+    KEY_KP_MINUS = 50,
+    KEY_KP_PLUS = 51
+
+    // KEY_ACCENT = 52,
+    // KEY_ = 53
+};
+
 class InputEvent {
 public:
     virtual String get_name() = 0;

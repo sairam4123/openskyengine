@@ -8,7 +8,7 @@
 #include "../../core/math/vector_2.h"
 
 
-const wchar_t *DisplayServerWindows::CLASS_NAME = L"OpenSkyEngine (inspired from Godot Game Engine)";
+const wchar_t *DisplayServerWindows::CLASS_NAME = L"OpenSkyEngine";
 
 Window *DisplayServerWindows::create_window(String *name, Vector2i *position, Vector2i *size) {
     auto win = DisplayServer::create_window(name, position, size);
@@ -51,6 +51,14 @@ HWND DisplayServerWindows::get_hwnd(int window_id) {
 LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         
         switch (uMsg) {
+        case WM_CREATE: {
+            for (auto &win : windows) {
+                if (get_hwnd(win->id) == hwnd) {
+                    std::wcout << "Window " << win->name << " created successfully!" << std::endl;
+                }
+            }
+            break;
+        }
         case WM_DESTROY: {
             auto main_hwnd = get_hwnd(main_window->id);
             if (hwnd != main_hwnd) {
@@ -61,14 +69,36 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             break;
         }
         case WM_KEYUP: {
-            switch ((wchar_t)wParam) {
-                case ' ':
-                    auto con_hwnd = GetConsoleWindow();
-                    auto visible = IsWindowVisible(con_hwnd);
-                    ShowWindow(con_hwnd, visible ? SW_HIDE : SW_SHOW);
+            switch (wParam) {
+                case VK_SHIFT: {
+                    shift = false;
                     break;
+                }
+                case VK_MENU: {
+                    alt = false;
+                    // alt gr
+                    ctrl = false;
+                    break;
+                }
+                case VK_CONTROL: {
+                    ctrl = false;
+                    break;
+                }
+                case VK_LWIN: {
+                    meta = false;
+                    break;
+                }
+                case VK_RWIN: {
+                    meta = false;
+                    break;
+                }
+
             }
             auto event = InputEventKey((wchar_t)wParam, false, false);
+            event.alt = alt;
+            event.ctrl = ctrl;
+            event.shift = shift;
+            event.meta = meta;
             // auto idx = std::find(pressed_keys.begin(), pressed_keys.end(), (wchar_t)&wParam);
             // if (idx != pressed_keys.end()) {
             //     pressed_keys.erase(idx);
@@ -78,6 +108,20 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             // std::cout << "The entered character is: " << (char)wParam << std::endl;
             break;
         }
+        case WM_SYSKEYDOWN: {
+            switch (wParam) {
+                case VK_MENU: {
+                    alt = true;
+                }
+            }
+        }
+        case WM_SYSKEYUP: {
+            switch (wParam) {
+                case VK_MENU: {
+                    alt = false;
+                }
+            }
+        }
         case WM_KEYDOWN: {
             switch ((wchar_t)wParam) {
                 case ' ':
@@ -86,8 +130,35 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
                     ShowWindow(con_hwnd, visible ? SW_HIDE : SW_SHOW);
                     break;
             }
+            switch (wParam) {
+                case VK_SHIFT: {
+                    shift = true;
+                    break;
+                }
+                case VK_MENU: {
+                    alt = true;
+                    break;
+                }
+                case VK_CONTROL: {
+                    ctrl = true;
+                    break;
+                }
+                case VK_LWIN: {
+                    meta = true;
+                    break;
+                }
+                case VK_RWIN: {
+                    meta = true;
+                    break;
+                }
+
+            }
             bool echo = (bool)pressed_keys.count((wchar_t)wParam);
             auto event = InputEventKey((wchar_t)wParam, true, echo);
+            event.alt = alt;
+            event.ctrl = ctrl;
+            event.shift = shift;
+            event.meta = meta;
             pressed_keys.insert((wchar_t)wParam);
             MainLoop::get_singleton()->propagate_input(&event);
             // std::cout << "The entered character is: " << (char)wParam << std::endl;
@@ -157,8 +228,11 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             GetWindowRect(hwnd, &rc);
             HDC hdc = BeginPaint(hwnd, &ps);
 
-            DrawTextW(hdc, L"Test", 5, &rc, DT_CENTER | DT_CALCRECT);
             FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW + 2)); // 2 is godot color!
+
+            // DrawTextW(hdc, L"Test", 5, &rc, DT_CALCRECT);
+            DrawTextW(hdc, L"Test", 5, &rc, DT_CENTER | DT_VCENTER);
+            // FillRect(hdc, &rc, (HBRUSH) (COLOR_WINDOW + 2)); // 2 is godot color!
 
             EndPaint(hwnd, &ps);
         }

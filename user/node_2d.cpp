@@ -25,9 +25,14 @@ void Node2D::_loop(const float delta) {
 //        std::cout << x << std::endl;
 //    }
 //    std::cout << x << std::endl;
-    if (x >= 20) {
+    if (x >= 10) {
+        // std::wcout << "Closing TestWindow2" << std::endl;
         for (auto &win : DisplayServer::get_singleton()->windows) {
-            win->close();
+        //     std::wcout << (std::wcscmp(win->name->wc_str(), L"TestWindow2"));
+            // std::wcout << " " << win->name->c_str() << std::endl;
+            if (std::wcscmp(win->name->wc_str(), L"TestWindow2") == 0) {
+                win->close();
+            }
         }
     }
 }
@@ -45,7 +50,7 @@ void Node2D::_input(InputEvent *event) {
 
     auto key_ev = dynamic_cast<InputEventKey *>(event);
     if (key_ev) {
-        if (key_ev->unicode == L'X') {
+        if (key_ev->unicode == L'X' &&  key_ev->shift && !key_ev->echo && key_ev->pressed) {
             std::wcout << key_ev->unicode << std::endl;
             auto win = DisplayServer::get_singleton()->create_window(
                 new String("Window #1"),
@@ -53,6 +58,8 @@ void Node2D::_input(InputEvent *event) {
                 new Vector2i(1020, 200)
             );
         }
-        std::wcout << "Key: " << key_ev->unicode << " is " << key_ev->pressed << " echo: " << key_ev->echo << std::endl;
+        std::wcout << "Key: " << key_ev->unicode << " is " << key_ev->pressed << " echo: " << key_ev->echo;
+        std::wcout << " shift: " << key_ev->shift <<  " ctrl: " << key_ev->ctrl;
+        std::wcout << " meta: " << key_ev->meta << " alt: " << key_ev->alt << std::endl;
     }
 }

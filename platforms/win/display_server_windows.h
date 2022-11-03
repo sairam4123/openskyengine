@@ -15,7 +15,12 @@
 class DisplayServerWindows : public DisplayServer{
 private:
     HINSTANCE hInstance;
-    
+
+    bool alt = false;
+    bool ctrl = false;
+    bool shift = false;
+    bool meta = false;
+
     std::set<wchar_t> pressed_keys;
     std::map<int, HWND> hwnd_id_map;
     
