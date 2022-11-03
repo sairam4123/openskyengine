@@ -29,6 +29,7 @@ private:
     
     void set_window_visiblity(int id, bool visible) override;
     int64_t get_native_handle(int id) override;
+    void alert(String* msg) override;
 
     HWND get_main_hwnd();
 

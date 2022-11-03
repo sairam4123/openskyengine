@@ -48,6 +48,9 @@ HWND DisplayServerWindows::get_hwnd(int window_id) {
    return hwnd_id_map[window_id];
 }
 
+void DisplayServerWindows::alert(String* msg) {
+    MessageBoxW(NULL, msg->wc_str(), L"ALERT!!!", MB_OK | MB_ICONEXCLAMATION);
+}
 LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
         
         switch (uMsg) {

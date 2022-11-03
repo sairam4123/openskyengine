@@ -25,15 +25,20 @@ void Node2D::_loop(const float delta) {
 //        std::cout << x << std::endl;
 //    }
 //    std::cout << x << std::endl;
-    if (x >= 10) {
+    if (x >= 10 && !alerted) {
+        DisplayServer::get_singleton()->alert(new String("Free Trial ENDED, purchase the game engine!"));
+        alerted = true;
         // std::wcout << "Closing TestWindow2" << std::endl;
+    }
+    if (x >= 15 && alerted) {    
         for (auto &win : DisplayServer::get_singleton()->windows) {
-        //     std::wcout << (std::wcscmp(win->name->wc_str(), L"TestWindow2"));
+            // std::wcout << (std::wcscmp(win->name->wc_str(), L"TestWindow2"));
             // std::wcout << " " << win->name->c_str() << std::endl;
-            if (std::wcscmp(win->name->wc_str(), L"TestWindow2") == 0) {
-                win->close();
-            }
+            // if (std::wcscmp(win->name->wc_str(), L"TestWindow2") == 0) {
+            win->close();
+            // }
         }
+        MainLoop::get_singleton()->exit();
     }
 }
 

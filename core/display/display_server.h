@@ -32,6 +32,8 @@ public:
     virtual void set_window_visiblity(int id, bool visible) = 0;
 
     virtual int64_t get_native_handle(int id) = 0;
+    
+    virtual void alert(String* msg) = 0;
 
     Window * main_window;
 

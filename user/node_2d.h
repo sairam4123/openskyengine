@@ -30,6 +30,7 @@ public:
     explicit Node2D(String *p_name) : Node(p_name) {
         name = p_name;
     }
+    bool alerted = false;
 };
 
 

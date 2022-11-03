@@ -127,7 +127,7 @@ void Windows::_loop(HINSTANCE hInstance, HWND hwnd) {
         auto time_now = get_time();
         auto dur = time_now - time_before;
         auto delta = std::chrono::duration_cast<std::chrono::duration<float>>(dur).count();
-        auto retValue = PeekMessageW(&msg, hwnd, 0, 0, PM_REMOVE);
+        auto retValue = PeekMessageW(&msg, NULL, 0, 0, PM_REMOVE);
         if (retValue){
             TranslateMessage(&msg);
         }
@@ -151,7 +151,6 @@ LRESULT Windows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
                 break;
             }
             MainLoop::get_singleton()->exit();
-            PostQuitMessage(0);
             break;
 //         case WM_KEYDOWN:
 // //            std::cout << ((char)wParam == 'H') << std::endl;
