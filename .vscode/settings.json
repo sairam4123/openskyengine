@@ -68,7 +68,11 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "codecvt": "cpp",
-        "set": "cpp"
+        "set": "cpp",
+        "mutex": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp"
     },
-    "C_Cpp.errorSquiggles": "Enabled"
+    "C_Cpp.errorSquiggles": "Enabled",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
 }

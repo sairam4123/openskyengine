@@ -31,11 +31,13 @@ String String::operator*(size_t num) {
 
 String &String::operator+=(std::string *add_string) {
     str = &str->append(*add_string);
+    convert(str);
     return *this;
 }
 
 String &String::operator+=(String string) {
     str = &str->append(string.c_str());
+    convert(str);
     return *this;
 }
 
@@ -45,6 +47,7 @@ String &String::operator*=(size_t num) {
         tmp = &tmp->append(*str);
     }
     str = tmp;
+    convert(str);
     return *this;
 }
 
@@ -54,6 +57,7 @@ String String::operator+(const char *add_string) {
 
 String &String::operator+=(const char *add_string) {
     str = &str->append(add_string);
+    convert(str);
     return *this;
 }
 
@@ -70,7 +74,8 @@ String::~String() {
 }
 
 bool String::operator==(const String *myString) {
-    return std::strcmp(str->c_str(), myString->str->c_str()) == 0;
+    return (std::strcmp(str->c_str(), myString->str->c_str()) == 0
+    && std::wcscmp(wstr->c_str(), myString->wstr->c_str()));
 }
 
 bool String::operator==(const char *myString) {
@@ -78,9 +83,18 @@ bool String::operator==(const char *myString) {
 }
 
 bool String::operator!=(const String *myString) {
-    return std::strcmp(str->c_str(), myString->str->c_str()) != 0;
+    return (std::strcmp(str->c_str(), myString->str->c_str()) != 0
+    && std::wcscmp(wstr->c_str(), myString->wstr->c_str()));
 }
 
 bool String::operator!=(const char *myString) {
     return std::strcmp(str->c_str(), myString) != 0;
+}
+
+bool String::operator!=(const wchar_t *myString) {
+    return std::wcscmp(wstr->c_str(), myString) != 0;
+}
+
+bool String::operator==(const wchar_t *myString) {
+    return std::wcscmp(wstr->c_str(), myString) == 0;
 }

@@ -34,6 +34,8 @@ public:
     virtual int64_t get_native_handle(int id) = 0;
     
     virtual void alert(String* msg) = 0;
+    
+    bool is_main_window(int id);
 
     Window * main_window;
 

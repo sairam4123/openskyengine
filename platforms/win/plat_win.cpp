@@ -39,9 +39,9 @@ void Windows::CreateConsole()
     std::cin.clear();
 
     // std::wcout, std::wclog, std::wcerr, std::wcin
-    HANDLE hConOut = CreateFile("CONOUT$", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,
+    HANDLE hConOut = CreateFileW(L"CONOUT$", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,
                                 nullptr);
-    HANDLE hConIn = CreateFile("CONIN$", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,
+    HANDLE hConIn = CreateFileW(L"CONIN$", GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL,
                                nullptr);
     SetStdHandle(STD_OUTPUT_HANDLE, hConOut);
     SetStdHandle(STD_ERROR_HANDLE, hConOut);
@@ -105,17 +105,17 @@ int Windows::win_main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLi
     ShowWindow(hwnd, nCmdShow);
     CreateConsole();
     HWND console_hwnd = GetConsoleWindow();
-    ShowWindow(console_hwnd, SW_HIDE);
+    ShowWindow(console_hwnd, SW_SHOW);
     auto main = Main();
     main.init();
     MainLoop::get_singleton()->start();
 
-    _loop(hInstance, hwnd);
+    start_loop(hInstance, hwnd);
     FreeConsole();
     return 0;
 }
 
-void Windows::_loop(HINSTANCE hInstance, HWND hwnd) {
+void Windows::start_loop(HINSTANCE hInstance, HWND hwnd) {
     auto get_time = []() {
         return std::chrono::duration_cast<TIME>(
                 std::chrono::system_clock::now().time_since_epoch());
@@ -144,81 +144,81 @@ void Windows::_loop(HINSTANCE hInstance, HWND hwnd) {
     }
 }
 
-LRESULT Windows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-    switch (uMsg) {
-        case WM_DESTROY:
-            if (hwnd != main_hwnd) {
-                break;
-            }
-            MainLoop::get_singleton()->exit();
-            break;
-//         case WM_KEYDOWN:
-// //            std::cout << ((char)wParam == 'H') << std::endl;
-//             switch ((wchar_t)wParam) {
-//                 case ' ':
-//                     ToggleConsoleWindow();
+// LRESULT Windows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
+//     switch (uMsg) {
+//         case WM_DESTROY:
+//             if (hwnd != main_hwnd) {
+//                 break;
 //             }
-//             std::cout << "The entered character is: " << (char)wParam << std::endl;
+//             MainLoop::get_singleton()->exit();
 //             break;
-        case WM_MOUSEMOVE: {
-            auto x_pos = (int)GET_X_LPARAM(lParam);
-            auto y_pos = (int)GET_Y_LPARAM(lParam);
-            auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseMotion(&pos, Vector2::ZERO());
-            MainLoop::get_singleton()->propagate_input(&event);
-            break;
-        }
-        case WM_LBUTTONUP: {
-            auto x_pos = (int) GET_X_LPARAM(lParam);
-            auto y_pos = (int) GET_Y_LPARAM(lParam);
-            auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseButton(&pos, ButtonCode::L_BUTTON, false);
-            MainLoop::get_singleton()->propagate_input(&event);
-            break;
-        }
-        case WM_LBUTTONDOWN: {
-            auto x_pos = (int) GET_X_LPARAM(lParam);
-            auto y_pos = (int) GET_Y_LPARAM(lParam);
-            auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseButton(&pos, ButtonCode::L_BUTTON, true);
-            MainLoop::get_singleton()->propagate_input(&event);
-            break;
-        }
-        case WM_RBUTTONUP: {
-            auto x_pos = (int) GET_X_LPARAM(lParam);
-            auto y_pos = (int) GET_Y_LPARAM(lParam);
-            auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseButton(&pos, ButtonCode::R_BUTTON, false);
-            MainLoop::get_singleton()->propagate_input(&event);
-            break;
-        }
-        case WM_RBUTTONDOWN: {
-            auto x_pos = (int) GET_X_LPARAM(lParam);
-            auto y_pos = (int) GET_Y_LPARAM(lParam);
-            auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseButton(&pos, ButtonCode::R_BUTTON, true);
-            MainLoop::get_singleton()->propagate_input(&event);
-            break;
-        }
+// //         case WM_KEYDOWN:
+// // //            std::cout << ((char)wParam == 'H') << std::endl;
+// //             switch ((wchar_t)wParam) {
+// //                 case ' ':
+// //                     ToggleConsoleWindow();
+// //             }
+// //             std::cout << "The entered character is: " << (char)wParam << std::endl;
+// //             break;
+//         case WM_MOUSEMOVE: {
+//             auto x_pos = (int)GET_X_LPARAM(lParam);
+//             auto y_pos = (int)GET_Y_LPARAM(lParam);
+//             auto pos = Vector2(x_pos, y_pos);
+//             auto event = InputEventMouseMotion(&pos, Vector2::ZERO());
+//             MainLoop::get_singleton()->propagate_input(&event);
+//             break;
+//         }
+//         case WM_LBUTTONUP: {
+//             auto x_pos = (int) GET_X_LPARAM(lParam);
+//             auto y_pos = (int) GET_Y_LPARAM(lParam);
+//             auto pos = Vector2(x_pos, y_pos);
+//             auto event = InputEventMouseButton(&pos, ButtonCode::L_BUTTON, false);
+//             MainLoop::get_singleton()->propagate_input(&event);
+//             break;
+//         }
+//         case WM_LBUTTONDOWN: {
+//             auto x_pos = (int) GET_X_LPARAM(lParam);
+//             auto y_pos = (int) GET_Y_LPARAM(lParam);
+//             auto pos = Vector2(x_pos, y_pos);
+//             auto event = InputEventMouseButton(&pos, ButtonCode::L_BUTTON, true);
+//             MainLoop::get_singleton()->propagate_input(&event);
+//             break;
+//         }
+//         case WM_RBUTTONUP: {
+//             auto x_pos = (int) GET_X_LPARAM(lParam);
+//             auto y_pos = (int) GET_Y_LPARAM(lParam);
+//             auto pos = Vector2(x_pos, y_pos);
+//             auto event = InputEventMouseButton(&pos, ButtonCode::R_BUTTON, false);
+//             MainLoop::get_singleton()->propagate_input(&event);
+//             break;
+//         }
+//         case WM_RBUTTONDOWN: {
+//             auto x_pos = (int) GET_X_LPARAM(lParam);
+//             auto y_pos = (int) GET_Y_LPARAM(lParam);
+//             auto pos = Vector2(x_pos, y_pos);
+//             auto event = InputEventMouseButton(&pos, ButtonCode::R_BUTTON, true);
+//             MainLoop::get_singleton()->propagate_input(&event);
+//             break;
+//         }
 
-        case WM_PAINT: {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hwnd, &ps);
+//         case WM_PAINT: {
+//             PAINTSTRUCT ps;
+//             HDC hdc = BeginPaint(hwnd, &ps);
 
-            FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW + 2)); // 2 is godot color!
+//             FillRect(hdc, &ps.rcPaint, (HBRUSH) (COLOR_WINDOW + 2)); // 2 is godot color!
 
-            EndPaint(hwnd, &ps);
-        }
-            break;
-        case WM_SETCURSOR: {
-            auto cursor = LoadCursorW(nullptr,(LPCWSTR)IDC_ARROW);
-            SetCursor(cursor);
-        }
-        default:
-            return DefWindowProcW(hwnd, uMsg, wParam, lParam);
-    }
-    return 0;
-}
+//             EndPaint(hwnd, &ps);
+//         }
+//             break;
+//         case WM_SETCURSOR: {
+//             auto cursor = LoadCursorW(nullptr,(LPCWSTR)IDC_ARROW);
+//             SetCursor(cursor);
+//         }
+//         default:
+//             return DefWindowProcW(hwnd, uMsg, wParam, lParam);
+//     }
+//     return 0;
+// }
 
 inline bool Windows::IsConsoleWindowActive() {
     return IsWindowVisible(GetConsoleWindow());

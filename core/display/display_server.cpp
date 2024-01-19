@@ -31,4 +31,8 @@ void DisplayServer::destroy_window(Window *window) {
     }
 }
 
+bool DisplayServer::is_main_window(int id) {
+    return main_window->id == id;
+}
+
 DisplayServer *DisplayServer::displayServer = nullptr;

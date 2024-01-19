@@ -53,6 +53,10 @@ public:
 
     bool operator==(const char* myString);
 
+    bool operator==(const wchar_t* myString);
+    bool operator!=(const wchar_t* myString);
+
+
     bool operator!=(const String* myString);
 
     bool operator!=(const char* myString);

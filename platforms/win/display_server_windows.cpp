@@ -52,7 +52,13 @@ void DisplayServerWindows::alert(String* msg) {
     MessageBoxW(NULL, msg->wc_str(), L"ALERT!!!", MB_OK | MB_ICONEXCLAMATION);
 }
 LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-        
+        // wchar_t msg[32];
+        Window* current_window;
+        for (auto &win: windows) {
+            if (get_hwnd(win->id) == hwnd) {
+                current_window = win;
+            }
+        }
         switch (uMsg) {
         case WM_CREATE: {
             for (auto &win : windows) {
@@ -71,107 +77,173 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             PostQuitMessage(0);
             break;
         }
-        case WM_KEYUP: {
-            switch (wParam) {
-                case VK_SHIFT: {
-                    shift = false;
-                    break;
-                }
-                case VK_MENU: {
-                    alt = false;
-                    // alt gr
-                    ctrl = false;
-                    break;
-                }
-                case VK_CONTROL: {
-                    ctrl = false;
-                    break;
-                }
-                case VK_LWIN: {
-                    meta = false;
-                    break;
-                }
-                case VK_RWIN: {
-                    meta = false;
-                    break;
-                }
+   
+    case WM_SYSKEYDOWN:
+    case WM_SYSKEYUP:
+    case WM_KEYUP: 
+    case WM_KEYDOWN: {
+        
+        auto was_key_down = (HIWORD(lParam) & KF_REPEAT) == KF_REPEAT;
+        auto is_up = (HIWORD(lParam) & KF_UP) == KF_UP;
+        
+        switch(wParam) {
+            case VK_SHIFT: {
+                shift = !is_up;
+                std::wcout << "SHIFT PRESSED KEYDOWN" << std::endl;
+                break;
+            }
+            case VK_MENU: {
+                alt = !is_up;
+                std::wcout << "ALT PRESSED KEYDOWN" << std::endl;
+                break;
+            }
+            case VK_CONTROL: {
+                std::wcout << "CTRL PRESSED KEYDOWN" << std::endl;
+                ctrl = !is_up;
+                break;
+            }
+            case VK_LWIN:
+            case VK_RWIN: {
+                meta = !is_up;
+                break;
+            }
+        };
 
-            }
-            auto event = InputEventKey((wchar_t)wParam, false, false);
-            event.alt = alt;
-            event.ctrl = ctrl;
-            event.shift = shift;
-            event.meta = meta;
-            // auto idx = std::find(pressed_keys.begin(), pressed_keys.end(), (wchar_t)&wParam);
-            // if (idx != pressed_keys.end()) {
-            //     pressed_keys.erase(idx);
-            // }
-            pressed_keys.erase((wchar_t)wParam);
-            MainLoop::get_singleton()->propagate_input(&event);
-            // std::cout << "The entered character is: " << (char)wParam << std::endl;
-            break;
-        }
-        case WM_SYSKEYDOWN: {
-            switch (wParam) {
-                case VK_MENU: {
-                    alt = true;
-                }
-            }
-        }
-        case WM_SYSKEYUP: {
-            switch (wParam) {
-                case VK_MENU: {
-                    alt = false;
-                }
-            }
-        }
-        case WM_KEYDOWN: {
-            switch ((wchar_t)wParam) {
-                case ' ':
-                    auto con_hwnd = GetConsoleWindow();
-                    auto visible = IsWindowVisible(con_hwnd);
-                    ShowWindow(con_hwnd, visible ? SW_HIDE : SW_SHOW);
-                    break;
-            }
-            switch (wParam) {
-                case VK_SHIFT: {
-                    shift = true;
-                    break;
-                }
-                case VK_MENU: {
-                    alt = true;
-                    break;
-                }
-                case VK_CONTROL: {
-                    ctrl = true;
-                    break;
-                }
-                case VK_LWIN: {
-                    meta = true;
-                    break;
-                }
-                case VK_RWIN: {
-                    meta = true;
-                    break;
-                }
+        printf("\nWParam in wchar_t: %c, %d, %d\n", (wchar_t)wParam, is_up, was_key_down);
+        auto event = InputEventKey((wchar_t)wParam, !is_up, was_key_down, current_window);
+        event.alt = alt;
+        event.ctrl = ctrl;
+        event.shift = shift;
+        event.meta = meta;
+        MainLoop::get_singleton()->propagate_input(&event);
 
-            }
-            bool echo = (bool)pressed_keys.count((wchar_t)wParam);
-            auto event = InputEventKey((wchar_t)wParam, true, echo);
-            event.alt = alt;
-            event.ctrl = ctrl;
-            event.shift = shift;
-            event.meta = meta;
-            pressed_keys.insert((wchar_t)wParam);
-            MainLoop::get_singleton()->propagate_input(&event);
-            // std::cout << "The entered character is: " << (char)wParam << std::endl;
-            break;
-        }
+        break;
+        
+    }
+        // swprintf_s(msg, L"WM_KEYDOWN: 0x%x\n", wParam);
+        // std::wcout << (msg) << std::endl;
+
+
+        // swprintf_s(msg, L"WM_KEYUP: 0x%x\n", wParam);
+        // std::wcout << (msg) << std::endl;
+
+        // case WM_KEYUP: {
+        //     switch (wParam) {
+        //         case VK_SHIFT: {
+        //             shift = false;
+        //             std::wcout << "SHIFT RELEASED KEYUP" << std::endl;
+        //             break;
+        //         }
+        //         case VK_MENU: {
+        //             alt = false;
+        //             std::wcout << "ALT RELEASED KEYUP" << std::endl;
+        //             // alt gr
+        //             // ctrl = false;
+        //             break;
+        //         }
+        //         case VK_CONTROL: {
+        //             ctrl = false;
+        //             std::wcout << "CTRL RELEASED KEYUP" << std::endl;
+        //             break;
+        //         }
+        //         case VK_LWIN: {
+        //             meta = false;
+        //             std::wcout << "LWIN RELEASED KEYUP" << std::endl;
+        //             break;
+        //         }
+        //         case VK_RWIN: {
+        //             std::wcout << "RWIN RELEASED KEYUP" << std::endl;
+        //             meta = false;
+        //             break;
+        //         }
+
+        //     }
+        //     auto event = InputEventKey((wchar_t)wParam, false, false);
+        //     event.alt = alt;
+        //     event.ctrl = ctrl;
+        //     event.shift = shift;
+        //     event.meta = meta;
+        //     // auto idx = std::find(pressed_keys.begin(), pressed_keys.end(), (wchar_t)&wParam);
+        //     // if (idx != pressed_keys.end()) {
+        //     //     pressed_keys.erase(idx);
+        //     // }
+        //     pressed_keys.erase((wchar_t)wParam);
+        //     MainLoop::get_singleton()->propagate_input(&event);
+        //     // std::cout << "The entered character is: " << (char)wParam << std::endl;
+        //     break;
+        // }
+        // case WM_SYSKEYDOWN: {
+        //     switch (wParam) {
+        //         case VK_MENU: {
+        //             alt = true;
+        //             std::wcout << "ALT PRESSED SYSKEYDOWN" << std::endl;
+        //             break;
+        //         }
+        //     }
+        //     pressed_keys.insert((wchar_t)wParam);
+        // }
+        // case WM_SYSKEYUP: {
+        //     switch (wParam) {
+        //         case VK_MENU: {
+        //             alt = false;
+        //             std::wcout << "ALT RELEASED SYSKEYUP" << std::endl;
+        //             break;
+        //         }
+        //     }
+        //     pressed_keys.erase((wchar_t)wParam);
+        // }
+        // case WM_KEYDOWN: {
+        //     switch ((wchar_t)wParam) {
+        //         case ' ':
+        //             auto con_hwnd = GetConsoleWindow();
+        //             auto visible = IsWindowVisible(con_hwnd);
+        //             ShowWindow(con_hwnd, visible ? SW_HIDE : SW_SHOW);
+        //             break;
+        //     }
+        //     switch (wParam) {
+        //         case VK_SHIFT: {
+        //             shift = true;
+        //             std::wcout << "SHIFT PRESSED KEYDOWN" << std::endl;
+        //             break;
+        //         }
+        //         case VK_MENU: {
+        //             alt = true;
+        //             std::wcout << "ALT PRESSED KEYDOWN" << std::endl;
+        //             break;
+        //         }
+        //         case VK_CONTROL: {
+        //             ctrl = true;
+        //             std::wcout << "CTRL PRESSED KEYDOWN" << std::endl;
+        //             break;
+        //         }
+        //         case VK_LWIN: {
+        //             meta = true;
+        //             std::wcout << "LWIN PRESSED KEYDOWN" << std::endl;
+        //             break;
+        //         }
+        //         case VK_RWIN: {
+        //             meta = true;
+        //             std::wcout << "RWIN PRESSED KEYDOWN" << std::endl;
+        //             break;
+        //         }
+
+        //     }
+        //     bool echo = (bool)pressed_keys.count((wchar_t)wParam);
+        //     auto event = InputEventKey((wchar_t)wParam, true, echo);
+        //     event.alt = alt;
+        //     event.ctrl = ctrl;
+        //     event.shift = shift;
+        //     event.meta = meta;
+        //     pressed_keys.insert((wchar_t)wParam);
+        //     MainLoop::get_singleton()->propagate_input(&event);
+        //     // std::cout << "The entered character is: " << (char)wParam << std::endl;
+        //     break;
+        // }
         case WM_MOUSEMOVE: {
             auto x_pos = (int)GET_X_LPARAM(lParam);
             auto y_pos = (int)GET_Y_LPARAM(lParam);
             auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseMotion(&pos, Vector2::ZERO());
+            auto event = InputEventMouseMotion(&pos, Vector2::ZERO(), current_window);
             MainLoop::get_singleton()->propagate_input(&event);
             break;
         }
@@ -180,7 +252,7 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             auto x_pos = (int) GET_X_LPARAM(lParam);
             auto y_pos = (int) GET_Y_LPARAM(lParam);
             auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseButton(&pos, ButtonCode::M_BUTTON, false);
+            auto event = InputEventMouseButton(&pos, ButtonCode::M_BUTTON, false, current_window);
             MainLoop::get_singleton()->propagate_input(&event);
             break;
         }
@@ -188,7 +260,7 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             auto x_pos = (int) GET_X_LPARAM(lParam);
             auto y_pos = (int) GET_Y_LPARAM(lParam);
             auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseButton(&pos, ButtonCode::M_BUTTON, true);
+            auto event = InputEventMouseButton(&pos, ButtonCode::M_BUTTON, true, current_window);
             MainLoop::get_singleton()->propagate_input(&event);
             break;
         }
@@ -196,7 +268,7 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             auto x_pos = (int) GET_X_LPARAM(lParam);
             auto y_pos = (int) GET_Y_LPARAM(lParam);
             auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseButton(&pos, ButtonCode::L_BUTTON, false);
+            auto event = InputEventMouseButton(&pos, ButtonCode::L_BUTTON, false, current_window);
             MainLoop::get_singleton()->propagate_input(&event);
             break;
         }
@@ -204,7 +276,7 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             auto x_pos = (int) GET_X_LPARAM(lParam);
             auto y_pos = (int) GET_Y_LPARAM(lParam);
             auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseButton(&pos, ButtonCode::L_BUTTON, true);
+            auto event = InputEventMouseButton(&pos, ButtonCode::L_BUTTON, true, current_window);
             MainLoop::get_singleton()->propagate_input(&event);
             break;
         }
@@ -212,7 +284,7 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             auto x_pos = (int) GET_X_LPARAM(lParam);
             auto y_pos = (int) GET_Y_LPARAM(lParam);
             auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseButton(&pos, ButtonCode::R_BUTTON, false);
+            auto event = InputEventMouseButton(&pos, ButtonCode::R_BUTTON, false, current_window);
             MainLoop::get_singleton()->propagate_input(&event);
             break;
         }
@@ -220,7 +292,7 @@ LRESULT DisplayServerWindows::wnd_proc(HWND hwnd, UINT uMsg, WPARAM wParam, LPAR
             auto x_pos = (int) GET_X_LPARAM(lParam);
             auto y_pos = (int) GET_Y_LPARAM(lParam);
             auto pos = Vector2(x_pos, y_pos);
-            auto event = InputEventMouseButton(&pos, ButtonCode::R_BUTTON, true);
+            auto event = InputEventMouseButton(&pos, ButtonCode::R_BUTTON, true, current_window);
             MainLoop::get_singleton()->propagate_input(&event);
             break;
         }

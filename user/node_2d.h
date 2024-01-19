@@ -30,7 +30,12 @@ public:
     explicit Node2D(String *p_name) : Node(p_name) {
         name = p_name;
     }
+private:
+    bool insanity_check_successful = false;
     bool alerted = false;
+    int insanity_checks = 0;
+    int max_windows = 5;
+    int current_window_count = 1;
 };
 
 

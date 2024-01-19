@@ -35,7 +35,8 @@
 /cmake-build*
 /.idea/*
 
-/build/*
+/build/
+/nbuild/
 
 *.dot
 *.png

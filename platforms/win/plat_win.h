@@ -27,7 +27,7 @@ public:
 
     static void CreateConsole();
 
-    void _loop(HINSTANCE hInstance, HWND hwnd);
+    void start_loop(HINSTANCE hInstance, HWND hwnd);
 
     int WINAPI win_main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow);
 

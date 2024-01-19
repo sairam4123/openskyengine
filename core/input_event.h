@@ -8,6 +8,7 @@
 
 #include "math/vector_2.h"
 #include "gstring.h"
+#include "window.h"
 
 enum Key {
     KEY_A = 0,
@@ -74,6 +75,15 @@ enum Key {
 class InputEvent {
 public:
     virtual String get_name() = 0;
+    Window* window;
+
+    Window* get_window() {
+        return window;
+    }
+
+    InputEvent(Window* p_window) {
+        window = p_window;
+    }
 };
 
 class InputEventWithModifiers: public InputEvent {
@@ -86,6 +96,8 @@ public:
     String get_name() override {
         return String("InputEventKey");
     }
+
+    InputEventWithModifiers(Window* p_window) : InputEvent(p_window) {};
 
 };
 
@@ -100,7 +112,7 @@ public:
         return String("InputEventKey");
     }
 
-    InputEventKey(wchar_t p_unicode, bool p_pressed, bool p_echo) {
+    InputEventKey(wchar_t p_unicode, bool p_pressed, bool p_echo, Window* p_window) : InputEventWithModifiers(p_window) {
         unicode = p_unicode;
         pressed = p_pressed;
         echo = p_echo;
@@ -118,6 +130,7 @@ public:
     String get_name() override {
         return String("InputEventMouse");
     }
+    InputEventMouse(Window *p_window) : InputEventWithModifiers(p_window) {};
 };
 class InputEventMouseMotion : public InputEventMouse {
 public:
@@ -126,9 +139,10 @@ public:
     String get_name() override {
         return String("InputEventMouseMotion");
     }
-    InputEventMouseMotion(Vector2 *p_position, Vector2 *p_relative) : InputEventMouse() {
+    InputEventMouseMotion(Vector2 *p_position, Vector2 *p_relative, Window* p_window) : InputEventMouse(p_window) {
         position = p_position;
         relative = p_relative;
+        
     }
 };
 
@@ -143,7 +157,7 @@ public:
         return String("InputEventMouseButton");
     }
 
-    InputEventMouseButton(Vector2 *p_position, ButtonCode p_button_index, bool p_pressed) : InputEventMouse() {
+    InputEventMouseButton(Vector2 *p_position, ButtonCode p_button_index, bool p_pressed, Window* p_window) : InputEventMouse(p_window) {
         position = p_position;
         button_index = p_button_index;
         pressed = p_pressed;

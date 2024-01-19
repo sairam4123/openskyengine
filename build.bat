@@ -1,7 +1,7 @@
 @echo off
 cd %~dp0
-cmake -B build -S . -G "NMake Makefiles" 
-cd build 
+cmake -B nbuild -S . -G "NMake Makefiles" 
+cd nbuild 
 nmake 
 start .
 cd ..
